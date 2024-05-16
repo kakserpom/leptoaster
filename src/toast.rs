@@ -37,13 +37,14 @@ pub fn Toast(toast: ToastData) -> impl IntoView {
 			return;
 		};
 
-		TimeoutFuture::new(expiry).await;
+		let clear_signal = toast.clear_signal;
+            	TimeoutFuture::new(expiry).await;
 
-		if toast.clear_signal.get_untracked() {
-			return;
-		}
+            	if clear_signal.get_untracked() {
+                return;
+            }
 
-		toast.clear_signal.set(true);
+            clear_signal.set(true);
 	});
 
 	create_resource(move || toast.clear_signal.get(), move |clear| async move {
